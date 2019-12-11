@@ -22,7 +22,7 @@ namespace MVVM_Users
             app.DataContext = context;
             //app.TLUsers.ItemsSource = context.Users;
             app.Show();
-
+            //app.ContentRendered += new EventHandler(context.Window_ContentRendered);
         }
 
         //protected override void OnStartup(StartupEventArgs e)

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM_Users"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="500">
+        Title="MainWindow" Height="400" Width="500">
 
     <Grid Margin="100,50">
         <Grid.ColumnDefinitions>
@@ -17,15 +17,17 @@
             <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="auto" MinHeight="50"/>
             <RowDefinition Height="Auto" MinHeight="50"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameLable" Text="Name" HorizontalAlignment="Center" Margin="0,0,0,0"/>
         <TextBox Grid.Row="1" Grid.Column="0" x:Name="NameTBox" Text="{Binding Name}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,0,0" FontWeight="Bold"/>
         <Button Grid.Row="2" Grid.Column="0" x:Name="AddBtn" Content="Add" Command="{Binding Path=AddUserCommand}" Margin="0,5,0,0"/>
         <Button Grid.Row="3" Grid.Column="0" x:Name="DelBtn" Content="Delete" Command="{Binding Path=DeleteUserCommand}" Margin="0,5,0,0"/>
-        <ListBox x:Name="TLUsers" ItemsSource="{Binding Users}" Grid.RowSpan="4" Grid.Column="1" Margin="5,0,0,0">
+        <Button Grid.Row="4" Grid.Column="0" x:Name="ShowBtn" Content="Show Users" Command="{Binding Path=ShowUsersCommand}" Margin="0,5,0,0"/>
+        <ListBox x:Name="TLUsers" ItemsSource="{Binding StrCollection}" Grid.RowSpan="5" Grid.Column="1" HorizontalContentAlignment="Center" Margin="5,0,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}"/>
+                    <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
