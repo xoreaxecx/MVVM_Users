@@ -20,14 +20,28 @@
             <RowDefinition Height="Auto" MinHeight="50"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="NameLable" Text="Name" HorizontalAlignment="Center" Margin="0,0,0,0"/>
-        <TextBox Grid.Row="1" Grid.Column="0" x:Name="NameTBox" Text="{Binding Name}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,0,0" FontWeight="Bold"/>
         <Button Grid.Row="2" Grid.Column="0" x:Name="AddBtn" Content="Add" Command="{Binding Path=AddUserCommand}" Margin="0,5,0,0"/>
         <Button Grid.Row="3" Grid.Column="0" x:Name="DelBtn" Content="Delete" Command="{Binding Path=DeleteUserCommand}" Margin="0,5,0,0"/>
         <Button Grid.Row="4" Grid.Column="0" x:Name="ShowBtn" Content="Show Users" Command="{Binding Path=ShowUsersCommand}" Margin="0,5,0,0"/>
-        <ListBox x:Name="TLUsers" ItemsSource="{Binding StrCollection}" Grid.RowSpan="5" Grid.Column="1" HorizontalContentAlignment="Center" Margin="5,0,0,0">
+        <TextBox Grid.Row="1" 
+                 Grid.Column="0" 
+                 x:Name="NameTBox" 
+                 Text="{Binding Name,FallbackValue=0}" 
+                 HorizontalContentAlignment="Center" 
+                 VerticalContentAlignment="Center" 
+                 Margin="0,5,0,0" 
+                 FontWeight="Bold">
+        </TextBox>
+        <ListBox 
+            x:Name="TLUsers" 
+            d:DataContext="{d:DesignInstance {x:Type local:UserViewModel}}" ItemsSource="{Binding Path=StrCollection}"
+            Grid.RowSpan="5" 
+            Grid.Column="1" 
+            HorizontalContentAlignment="Center" 
+            Margin="5,0,0,0" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

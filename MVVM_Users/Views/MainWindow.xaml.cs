@@ -23,6 +23,7 @@ namespace MVVM_Users
     {
         public MainWindow()
         {
+            DataContext = new UserViewModel();
             InitializeComponent();
         }
     }

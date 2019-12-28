@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace MVVM_Users
         private string _name;
         private UserModel _currentUser;
         private List<UserModel> _users = new List<UserModel>();
+        private List<string> _strUsers = new List<string>();
         private ObservableCollection<string> _stringCollection = new ObservableCollection<string>();
         private ICommand _addUserCommand;
         private ICommand _deleteUserCommand;
@@ -72,10 +74,48 @@ namespace MVVM_Users
             }
         }
 
+        public List<string> strUsers
+        {
+            get { return _strUsers; }
+            set
+            {
+                if (value != _strUsers)
+                {
+                    _strUsers = value;
+                    OnPropertyChanged("Users");
+                }
+            }
+        }
+
+        public IReadOnlyCollection<FirebaseObject<UserModel>> dbUsers
+        {
+            get { return _dbUsers; }
+            set
+            {
+                if (value != _dbUsers)
+                {
+                    _dbUsers = value;
+                    OnPropertyChanged("Users");
+                }
+            }
+        }
+
         public ObservableCollection<string> StrCollection
         {
             get { return _stringCollection; }
-            set{ _stringCollection = value; }
+            set
+            {
+                if (value != _stringCollection)
+                {
+                    _stringCollection = value;
+                    OnPropertyChanged("Users");
+                    //foreach(var e in value)
+                    //{
+                    //    _stringCollection.Add(e);
+                    //    OnPropertyChanged("Users");
+                    //}
+                }
+            }
         }
 
         public ICommand AddUserCommand
@@ -117,18 +157,18 @@ namespace MVVM_Users
         //    }
         //}
 
-        //public ICommand ShowUsersCommand
-        //{
-        //    get
-        //    {
-        //        if(_showUsersCommand == null)
-        //        {
-        //            _showUsersCommand = new RelayCommand(
-        //                param => SetCollection());
-        //        }
-        //        return _showUsersCommand;
-        //    }
-        //}
+        public ICommand ShowUsersCommand
+        {
+            get
+            {
+                if (_showUsersCommand == null)
+                {
+                    _showUsersCommand = new RelayCommand(
+                        param => SetCollection());
+                }
+                return _showUsersCommand;
+            }
+        }
 
         public FirebaseClient FBClient
         {
@@ -141,11 +181,12 @@ namespace MVVM_Users
 
         public UserViewModel()
         {
-            UserDelegate callback = SetCollection;
-            GetUsers(callback);
-            //SetCollection();
-            //SetUsers();
-            StrCollection.Add("1");
+            //Task.Run(() => GetUsers());
+            Task t = Task.Factory.StartNew(() => GetUsers());
+            t.Wait();
+            //StrCollection.Add("1");
+            //Users.Add(new UserModel { Name = "Robert Paulson" });
+            //strUsers.Add("robert paulson");
         }
 
         private async void AddUser()
@@ -156,6 +197,7 @@ namespace MVVM_Users
             await FBClient
                 .Child("users")
                 .PostAsync(newUser,false);
+            strUsers.Add("one more");
         }
 
         private async void DeleteUser()
@@ -174,24 +216,39 @@ namespace MVVM_Users
             }
         }
 
-        private async void GetUsers(UserDelegate callback)
+        private async void GetUsers()
         {
             //_dbUsers = await FBClient
             //    .Child("users")
             //    .OrderByKey()
             //    .OnceAsync<UserModel>();//(new TimeSpan(100));
 
-            _dbUsers = await FBClient
+            var temp = await FBClient
                 .Child("users")
                 .OrderByKey()
                 .OnceAsync<UserModel>();//(new TimeSpan(100));
 
-            StrCollection = callback(_dbUsers);
-            StrCollection.Add("1");
-            //foreach(var user in dbUsers)
-            //{
-            //    StrCollection.Add(user.Object.Name);
-            //}
+            foreach (var e in temp)
+            {
+                Users.Add(e.Object);
+            }
+
+            foreach (var e in temp)
+            {
+                //strUsers.Add(e.Object.Name);
+                //}
+
+                await App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                 {
+                     StrCollection.Add(e.Object.Name);
+                 });
+                //StrCollection = callback(_dbUsers);
+                //StrCollection.Add("1");
+                //foreach(var user in dbUsers)
+                //{
+                //    StrCollection.Add(user.Object.Name);
+                //}
+            }
         }
 
         public void Window_ContentRendered(object sender, EventArgs e)
@@ -199,26 +256,10 @@ namespace MVVM_Users
 
         }
 
-        private ObservableCollection<string> SetCollection(IReadOnlyCollection<FirebaseObject<UserModel>> dbUsers)
+        private void SetCollection()
         {
-            var result = new ObservableCollection<string>();
-            //var itemsLock = new object();
-            //BindingOperations.EnableCollectionSynchronization(StrCollection,itemsLock); //!!!
-            //StrCollection.Clear();
-            foreach (var user in dbUsers)
-            {
-                //lock (itemsLock)
-                    result.Add(user.Object.Name);
-            }
-
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    StrCollection.Add("1");
-            //    StrCollection.Add("2");
-            //    StrCollection.Add("3");
-            //}
-
-            return result;
+            strUsers.Add("btn more");
+            StrCollection.Add("btn more");
         }
 
         #endregion

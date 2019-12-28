@@ -14,16 +14,16 @@ namespace MVVM_Users
     public partial class App : Application
     {
 
-        App()
-        {
-            MainWindow app = new MainWindow();
-            UserViewModel context = new UserViewModel();
+        //App()
+        //{
+            //MainWindow app = new MainWindow();
+            //UserViewModel context = new UserViewModel();
             //context.GetUsers();
-            app.DataContext = context;
+            //app.DataContext = context;
             //app.TLUsers.ItemsSource = context.Users;
-            app.Show();
+            //app.Show();
             //app.ContentRendered += new EventHandler(context.Window_ContentRendered);
-        }
+        //}
 
         //protected override void OnStartup(StartupEventArgs e)
         //{
