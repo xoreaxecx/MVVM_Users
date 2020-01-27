@@ -228,10 +228,10 @@ namespace MVVM_Users
                 .OrderByKey()
                 .OnceAsync<UserModel>();//(new TimeSpan(100));
 
-            foreach (var e in temp)
-            {
-                Users.Add(e.Object);
-            }
+            //foreach (var e in temp)
+            //{
+            //    Users.Add(e.Object);
+            //}
 
             foreach (var e in temp)
             {
@@ -258,8 +258,8 @@ namespace MVVM_Users
 
         private void SetCollection()
         {
-            strUsers.Add("btn more");
-            StrCollection.Add("btn more");
+            //strUsers.Add("btn more");
+            //StrCollection.Add("btn more");
         }
 
         #endregion
