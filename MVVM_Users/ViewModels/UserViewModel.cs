@@ -26,7 +26,7 @@ namespace MVVM_Users
         private ICommand _addUserCommand;
         private ICommand _deleteUserCommand;
         private ICommand _showUsersCommand;
-        private IReadOnlyCollection<FirebaseObject<UserModel>> _dbUsers;
+        private ObservableCollection<UserModel> _dbUsers = new ObservableCollection<UserModel>();
         private delegate ObservableCollection<string> UserDelegate(IReadOnlyCollection<FirebaseObject<UserModel>> dbUsers);
         private readonly FirebaseClient _fbClient = new FirebaseClient("https://mvvmuserlogin.firebaseio.com/");
 
@@ -86,7 +86,7 @@ namespace MVVM_Users
             }
         }
 
-        public IReadOnlyCollection<FirebaseObject<UserModel>> dbUsers
+        public ObservableCollection<UserModel> DbUsers
         {
             get { return _dbUsers; }
             set
@@ -94,7 +94,7 @@ namespace MVVM_Users
                 if (value != _dbUsers)
                 {
                     _dbUsers = value;
-                    OnPropertyChanged("dbUsers");
+                    OnPropertyChanged("DbUsers");
                 }
             }
         }
@@ -189,10 +189,10 @@ namespace MVVM_Users
 
         private void ShowUsers()
         {
-            foreach (var user in _dbUsers)
-            {
-                Users.Add(user.Object);
-            }
+            //foreach (var user in _dbUsers)
+            //{
+            //    Users.Add(user.Object);
+            //}
         }
 
         private async void GetUsers()
@@ -202,15 +202,25 @@ namespace MVVM_Users
                 .OrderByKey()
                 .OnceAsync<UserModel>();
 
-            await App.Current.Dispatcher.BeginInvoke((Action)delegate () { StrCollection.Clear(); });
+            await App.Current.Dispatcher.BeginInvoke((Action)delegate () { DbUsers.Clear(); });
 
             foreach (var e in temp)
             {
                 await App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                 {
-                     StrCollection.Add(e.Object.Name);
-                 });
+                {
+                    DbUsers.Add(new UserModel { Key = e.Key, Name = e.Object.Name });
+                });
             }
+
+            //await App.Current.Dispatcher.BeginInvoke((Action)delegate () { StrCollection.Clear(); });
+
+            //foreach (var e in temp)
+            //{
+            //    await App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            //     {
+            //         StrCollection.Add(e.Object.Name);
+            //     });
+            //}
         }
 
         public void Window_ContentRendered(object sender, EventArgs e)
