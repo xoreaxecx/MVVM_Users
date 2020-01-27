@@ -25,7 +25,6 @@ namespace MVVM_Users
         private ObservableCollection<string> _stringCollection = new ObservableCollection<string>();
         private ICommand _addUserCommand;
         private ICommand _deleteUserCommand;
-        private ICommand _getUsersCommand;
         private ICommand _showUsersCommand;
         private IReadOnlyCollection<FirebaseObject<UserModel>> _dbUsers;
         private delegate ObservableCollection<string> UserDelegate(IReadOnlyCollection<FirebaseObject<UserModel>> dbUsers);
@@ -82,7 +81,7 @@ namespace MVVM_Users
                 if (value != _strUsers)
                 {
                     _strUsers = value;
-                    OnPropertyChanged("Users");
+                    OnPropertyChanged("strUsers");
                 }
             }
         }
@@ -95,7 +94,7 @@ namespace MVVM_Users
                 if (value != _dbUsers)
                 {
                     _dbUsers = value;
-                    OnPropertyChanged("Users");
+                    OnPropertyChanged("dbUsers");
                 }
             }
         }
@@ -109,11 +108,6 @@ namespace MVVM_Users
                 {
                     _stringCollection = value;
                     OnPropertyChanged("Users");
-                    //foreach(var e in value)
-                    //{
-                    //    _stringCollection.Add(e);
-                    //    OnPropertyChanged("Users");
-                    //}
                 }
             }
         }
@@ -144,19 +138,6 @@ namespace MVVM_Users
             }
         }
 
-        //public ICommand GetUsersCommand
-        //{
-        //    get
-        //    {
-        //        if(_getUsersCommand == null)
-        //        {
-        //            _getUsersCommand = new RelayCommand(
-        //                param => GetUsers());
-        //        }
-        //        return _getUsersCommand;
-        //    }
-        //}
-
         public ICommand ShowUsersCommand
         {
             get
@@ -181,12 +162,9 @@ namespace MVVM_Users
 
         public UserViewModel()
         {
-            //Task.Run(() => GetUsers());
-            Task t = Task.Factory.StartNew(() => GetUsers());
-            t.Wait();
-            //StrCollection.Add("1");
-            //Users.Add(new UserModel { Name = "Robert Paulson" });
-            //strUsers.Add("robert paulson");
+            Task.Run(() => GetUsers());
+            //Task t = Task.Factory.StartNew(() => GetUsers());
+            //t.Wait();
         }
 
         private async void AddUser()
@@ -198,6 +176,7 @@ namespace MVVM_Users
                 .Child("users")
                 .PostAsync(newUser,false);
             strUsers.Add("one more");
+            GetUsers();
         }
 
         private async void DeleteUser()
@@ -218,36 +197,19 @@ namespace MVVM_Users
 
         private async void GetUsers()
         {
-            //_dbUsers = await FBClient
-            //    .Child("users")
-            //    .OrderByKey()
-            //    .OnceAsync<UserModel>();//(new TimeSpan(100));
-
             var temp = await FBClient
                 .Child("users")
                 .OrderByKey()
-                .OnceAsync<UserModel>();//(new TimeSpan(100));
+                .OnceAsync<UserModel>();
 
-            //foreach (var e in temp)
-            //{
-            //    Users.Add(e.Object);
-            //}
+            await App.Current.Dispatcher.BeginInvoke((Action)delegate () { StrCollection.Clear(); });
 
             foreach (var e in temp)
             {
-                //strUsers.Add(e.Object.Name);
-                //}
-
                 await App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                  {
                      StrCollection.Add(e.Object.Name);
                  });
-                //StrCollection = callback(_dbUsers);
-                //StrCollection.Add("1");
-                //foreach(var user in dbUsers)
-                //{
-                //    StrCollection.Add(user.Object.Name);
-                //}
             }
         }
 

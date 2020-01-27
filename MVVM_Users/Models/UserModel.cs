@@ -11,6 +11,7 @@ namespace MVVM_Users
         #region Fields
 
         private string _name;
+        private string _key;
 
         #endregion 
 
@@ -25,6 +26,19 @@ namespace MVVM_Users
                 {
                     _name = value;
                     OnPropertyChanged("Name");
+                }
+            }
+        }
+
+        public string Key
+        {
+            get { return _key; }
+            set
+            {
+                if (value != _key)
+                {
+                    _key = value;
+                    OnPropertyChanged("Key");
                 }
             }
         }

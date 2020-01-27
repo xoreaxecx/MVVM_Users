@@ -79,7 +79,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObservableObject.cs" />
-    <Compile Include="UserList.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

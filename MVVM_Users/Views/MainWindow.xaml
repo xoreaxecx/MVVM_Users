@@ -26,7 +26,7 @@
         <TextBox Grid.Row="1" 
                  Grid.Column="0" 
                  x:Name="NameTBox" 
-                 Text="{Binding Name,FallbackValue=0}" 
+                 Text="{Binding Name,FallbackValue=qwe}" 
                  HorizontalContentAlignment="Center" 
                  VerticalContentAlignment="Center" 
                  Margin="0,5,0,0" 
