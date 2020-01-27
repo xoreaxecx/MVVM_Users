@@ -34,7 +34,9 @@
         </TextBox>
         <ListBox 
             x:Name="TLUsers" 
-            d:DataContext="{d:DesignInstance {x:Type local:UserViewModel}}" ItemsSource="{Binding Path=DbUsers}"
+            d:DataContext="{d:DesignInstance {x:Type local:UserViewModel}}" 
+            ItemsSource="{Binding Path=DbUsers}"
+            SelectedItem="{Binding Path=SelectedtUser}"
             Grid.RowSpan="5" 
             Grid.Column="1" 
             HorizontalContentAlignment="Center" 

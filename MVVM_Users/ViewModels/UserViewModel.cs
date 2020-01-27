@@ -19,7 +19,7 @@ namespace MVVM_Users
         #region Fields
 
         private string _name;
-        private UserModel _currentUser;
+        private UserModel _selectedUser;
         private List<UserModel> _users = new List<UserModel>();
         private List<string> _strUsers = new List<string>();
         private ObservableCollection<string> _stringCollection = new ObservableCollection<string>();
@@ -47,15 +47,15 @@ namespace MVVM_Users
             }
         }
 
-        public UserModel CurrentUser
+        public UserModel SelectedtUser
         {
-            get { return _currentUser; }
+            get { return _selectedUser; }
             set
             {
-                if(value != _currentUser)
+                if(value != _selectedUser)
                 {
-                    _currentUser = value;
-                    OnPropertyChanged("CurrentUser");
+                    _selectedUser = value;
+                    OnPropertyChanged("SelectedtUser");
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace MVVM_Users
                 if (value != _stringCollection)
                 {
                     _stringCollection = value;
-                    OnPropertyChanged("Users");
+                    OnPropertyChanged("StrCollection");
                 }
             }
         }
@@ -181,10 +181,14 @@ namespace MVVM_Users
 
         private async void DeleteUser()
         {
-            await FBClient
-                .Child("users")
-                .Child(Name)
-                .DeleteAsync();
+            if (SelectedtUser != null && SelectedtUser.Key != null)
+            {
+                await FBClient
+                    .Child("users")
+                    .Child(SelectedtUser.Key)
+                    .DeleteAsync();
+                GetUsers();
+            }
         }
 
         private void ShowUsers()
